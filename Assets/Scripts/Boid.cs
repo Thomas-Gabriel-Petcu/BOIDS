@@ -71,6 +71,11 @@ public class Boid : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + l_v1 * _viewRadius);
         Gizmos.DrawLine(transform.position, transform.position + l_v2 * _viewRadius);
 
+        Gizmos.color = Color.blue;
+        if (FindCenterOfBoids(GetBoidsInView()) != Vector3.zero)
+        {
+            Gizmos.DrawCube(_centerOfBoidsInView, new Vector3(0.2f, 0.2f, 0.2f));
+        }
     }
 
     public Vector2 DirFromAngle(float angleInDeg, bool isGlobalAngle)
@@ -119,9 +124,15 @@ public class Boid : MonoBehaviour
         yield break;
     }
 
-    //private Vector3 FindCenterOfBoids(List<Collider2D> l_boidColliders)
-    //{
-
-    //}
-
+    private Vector3 FindCenterOfBoids(List<Collider2D> l_boidColliders)
+    {
+        _centerOfBoidsInView = Vector3.zero;
+        foreach (Collider2D l_col in l_boidColliders)
+        {
+            _centerOfBoidsInView += l_col.transform.position;
+        }
+        _centerOfBoidsInView += transform.position;
+        _centerOfBoidsInView /= l_boidColliders.Count + 1;
+        return _centerOfBoidsInView;
+    }
 }
